@@ -2,7 +2,6 @@ import { useState } from 'react'
 import Header2 from './components/Header'
 import Form from './components/Form'
 import ShowList from './components/ShowList'
-import axios from 'axios'
 import { useEffect } from 'react'
 import phonebookService from './services/phonebook'
 

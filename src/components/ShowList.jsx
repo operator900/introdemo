@@ -1,4 +1,4 @@
-import Button from './Button'
+import phonebookService from "../services/phonebook"
 
 const ShowList = ({filteredPersons}) => {
     return (
@@ -6,7 +6,19 @@ const ShowList = ({filteredPersons}) => {
             {filteredPersons.map((person) => (
                 <li key={person.id}>
                     {person.name} {person.number}
-                    <Button text="delete" />
+                    <button onClick={() => {
+                        if (window.confirm(`Delete ${person.name}?`)) {
+                            phonebookService
+                                .remove(person.id)
+                                .then(() => {
+                                    setPersons(persons.filter(p => p.id !== person.id))
+                                    setFilteredPersons(persons.filter(p => p.id !== person.id))
+                                })
+                                .catch(error => {
+                                    console.error('Error deleting data:', error)
+                                })
+                        }
+                    }}>delete</button>
                 </li>
             ))}
         </ul>
