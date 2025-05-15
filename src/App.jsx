@@ -89,6 +89,26 @@ const App = () => {
     return persons.some((person) => person.name.toLowerCase() === name.toLowerCase())
   }
 
+  const deletePerson = (id) => {
+    const person = persons.find(p => p.id === id)
+    console.log('Person to delete:', person)
+    
+    if (window.confirm(`Delete ${person.name}?`)) {
+      phonebookService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(p => p.id !== id))
+          setFilteredPersons(persons.filter(p => p.id !== id))
+        })
+        .catch(error => {
+          console.error('Error deleting data:', error)
+        })
+    }
+  }
+  const handleDelete = (id) => {
+    deletePerson(id)
+  }
+
   return (
     <div>
       <Header2 text="Phonebook"/>
@@ -115,7 +135,7 @@ const App = () => {
         submitType={() => false}/>
 
       <Header2 text="Numbers"/>
-      <ShowList filteredPersons={filteredPersons}/>
+      <ShowList filteredPersons={filteredPersons} onClick={handleDelete}/>
     </div>
   )
 }

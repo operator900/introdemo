@@ -1,19 +1,9 @@
 {
   "persons": [
     {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
-      "id": "3"
-    },
-    {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": "4"
-    },
-    {
-      "id": "0f80",
+      "id": "7bd7",
       "name": "Jose Muniz",
-      "number": "312-414-2345"
+      "number": "313-423-4142"
     }
   ]
 }
