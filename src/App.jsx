@@ -4,6 +4,7 @@ import Form from './components/Form'
 import ShowList from './components/ShowList'
 import { useEffect } from 'react'
 import phonebookService from './services/phonebook'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -11,6 +12,8 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
   const [filteredPersons, setFilteredPersons] = useState(persons)
+  const [notification, setNotification] = useState(null)
+  const [error, setError] = useState(null)
   
   useEffect(() => {
     phonebookService
@@ -20,7 +23,12 @@ const App = () => {
         setFilteredPersons(initialPersons)
       })
       .catch(error => {
-        console.error('Error fetching data:', error)
+        console.error('Error fetching data:', error);
+        setError('Failed to fetch data')
+        setTimeout(() => {
+          setError(null)
+        }, 5000)
+        
       })
   }, [])
 
@@ -48,9 +56,22 @@ const App = () => {
           setFilteredPersons(persons.map(p => (p.id !== person.id ? p : returnedPerson)))
           setNewName('')
           setNewNumber('')
+          setNotification(`Updated ${returnedPerson.name}`)
+          setTimeout(() => {
+            setNotification(null)
+          }
+          , 5000)
         })
         .catch(error => {
           console.error('Error updating data:', error)
+          setError(`Information of ${nameObject.name} has already been removed from server`)
+          setTimeout(() => {
+            setError(null)
+          }, 5000)
+          setPersons(persons.filter(p => p.id !== person.id))
+          setFilteredPersons(persons.filter(p => p.id !== person.id))
+          setNewName('')
+          setNewNumber('')
         })
       }
     }
@@ -62,9 +83,17 @@ const App = () => {
           setFilteredPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          setNotification(`Added ${returnedPerson.name}`)
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
         })
         .catch(error => {
           console.error('Error creating data:', error)
+          setError('Failed to create data')
+          setTimeout(() => {
+            setError(null)
+          }, 5000)
         })
     }
   }
@@ -99,9 +128,21 @@ const App = () => {
         .then(() => {
           setPersons(persons.filter(p => p.id !== id))
           setFilteredPersons(persons.filter(p => p.id !== id))
+          setNotification(`Deleted ${person.name}`)
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
         })
         .catch(error => {
           console.error('Error deleting data:', error)
+          setError(`Information of ${person.name} has already been removed from server`)
+          setTimeout(() => {
+            setError(null)
+          }, 5000)
+          setPersons(persons.filter(p => p.id !== id))
+          setFilteredPersons(persons.filter(p => p.id !== id))
+          setNewName('')
+          setNewNumber('')
         })
     }
   }
@@ -127,13 +168,14 @@ const App = () => {
         functionVar={handleNameChange}
         buttonType={"submit"}
         buttonSearchText={"add"}
-        submitType={addPerson}/>
+        submitType={addPerson}
+        />
       <Form
         text="number" 
         variable={newNumber} 
         functionVar={handleNumberChange}
         submitType={() => false}/>
-
+      <Notification message={notification} error={error}/>
       <Header2 text="Numbers"/>
       <ShowList filteredPersons={filteredPersons} onClick={handleDelete}/>
     </div>
